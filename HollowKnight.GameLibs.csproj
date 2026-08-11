@@ -1,20 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <!-- Fail the build if TargetSilksongVersion is not set, as early as possible -->
-  <Target Name="EnsureTargetSilksongVersionSet" BeforeTargets="ResolveReferences">
-    <Error Condition=" '$(TargetSilksongVersion)' == '' " Text="TargetSilksongVersion property must be set (e.g. via -p:TargetSilksongVersion=1.0.28324)" />
+  <!-- Fail the build if TargetHollowKnightVersion is not set, as early as possible -->
+  <Target Name="EnsureTargetHollowKnightVersionSet" BeforeTargets="ResolveReferences">
+    <Error Condition=" '$(TargetHollowKnightVersion)' == '' " Text="TargetHollowKnightVersion property must be set (e.g. via -p:TargetHollowKnightVersion=1.0.28324)" />
   </Target>
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <PackageVersion>1.2.0-silksong$(TargetSilksongVersion)</PackageVersion>
+    <PackageVersion>1.2.0-hollowKnight$(TargetHollowKnightVersion)</PackageVersion>
     <Authors>BadMagic</Authors>
-    <Description>The game libraries used for modding Hollow Knight: Silksong</Description>
-    <PackageTags>silksong modding bepinex5</PackageTags>
+    <Description>The game libraries used for modding Hollow Knight: HollowKnight</Description>
+    <PackageTags>hollowKnight modding bepinex5</PackageTags>
     <IncludeBuildOutput>False</IncludeBuildOutput>
     <NoDefaultExcludes>true</NoDefaultExcludes>
     <PackageReadmeFile>doc/README.md</PackageReadmeFile>
-    <PackageProjectUrl>https://github.com/BadMagic100/Silksong.GameLibs</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/BadMagic100/HollowKnight.GameLibs</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <!--
     NuGet complains about using the /ref/ path in packages because it doesn't work for projects using packages.config.
@@ -31,31 +31,31 @@
 
   <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="doc/" />
-    <Content Include="Silksong.GameLibs.props" Pack="True" PackagePath="build/" />
+    <Content Include="HollowKnight.GameLibs.props" Pack="True" PackagePath="build/" />
   </ItemGroup>
 
   <ItemGroup>
-    <SystemFiles Include="ref/$(TargetSilksongVersion)/System*.dll" />
-    <SystemFiles Include="ref/$(TargetSilksongVersion)/netstandard.dll" />
-    <SystemFiles Include="ref/$(TargetSilksongVersion)/mscorlib.dll" />
+    <SystemFiles Include="ref/$(TargetHollowKnightVersion)/System*.dll" />
+    <SystemFiles Include="ref/$(TargetHollowKnightVersion)/netstandard.dll" />
+    <SystemFiles Include="ref/$(TargetHollowKnightVersion)/mscorlib.dll" />
     <!-- 
     Included in UnityEngine.Modules package from BepInEx BaGet so we don't need to bundle these.
     Counterintuitively the "exclude" list is stuff which should be included in the bundle (it is excluded from the list of stuff to remove)
     because they are not covered by UnityEngine.Modules
     -->
-    <SystemFiles Include="ref/$(TargetSilksongVersion)/UnityEngine*.dll" Exclude="ref/$(TargetSilksongVersion)/UnityEngine.AMDModule.dll;ref/$(TargetSilksongVersion)/UnityEngine.ARModule.dll;ref/$(TargetSilksongVersion)/UnityEngine.NVIDIAModule.dll;ref/$(TargetSilksongVersion)/UnityEngine.UI.dll" />
+    <SystemFiles Include="ref/$(TargetHollowKnightVersion)/UnityEngine*.dll" Exclude="ref/$(TargetHollowKnightVersion)/UnityEngine.AMDModule.dll;ref/$(TargetHollowKnightVersion)/UnityEngine.ARModule.dll;ref/$(TargetHollowKnightVersion)/UnityEngine.NVIDIAModule.dll;ref/$(TargetHollowKnightVersion)/UnityEngine.UI.dll" />
   </ItemGroup>
 
   <ItemGroup>
-    <GameFiles Include="ref/$(TargetSilksongVersion)/Assembly-CSharp.dll" Publicize="true" Strip="true" />
-    <GameFiles Include="ref/$(TargetSilksongVersion)/PlayMaker.dll" Publicize="true" Strip="true" />
-    <GameFiles Include="ref/$(TargetSilksongVersion)/TeamCherry.*.dll" Publicize="true" Strip="true" />
+    <GameFiles Include="ref/$(TargetHollowKnightVersion)/Assembly-CSharp.dll" Publicize="true" Strip="true" />
+    <GameFiles Include="ref/$(TargetHollowKnightVersion)/PlayMaker.dll" Publicize="true" Strip="true" />
+    <GameFiles Include="ref/$(TargetHollowKnightVersion)/TeamCherry.*.dll" Publicize="true" Strip="true" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Remove="**/*" />
     <!-- System files are excluded because users don't need them. Game files are excluded because we will strip/publicize and include that instead-->
-    <Content Include="ref/$(TargetSilksongVersion)/*" Exclude="@(SystemFiles);@(GameFiles)" Pack="True" PackagePath="ref/$(TargetFramework)" />
+    <Content Include="ref/$(TargetHollowKnightVersion)/*" Exclude="@(SystemFiles);@(GameFiles)" Pack="True" PackagePath="ref/$(TargetFramework)" />
   </ItemGroup>
 
   <ItemGroup>

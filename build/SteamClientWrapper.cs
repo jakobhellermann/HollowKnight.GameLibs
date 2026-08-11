@@ -25,7 +25,7 @@ public class SteamClientException : Exception
 
 internal class SteamClientWrapper
 {
-    public const uint APP_ID = SilksongVersionInfo.STEAM_APPID;
+    public const uint APP_ID = HollowKnightVersionInfo.STEAM_APPID;
 
     public record CdnAuthInfo(byte[] DepotKey, string CdnAuthToken);
 
@@ -71,12 +71,12 @@ internal class SteamClientWrapper
         return Task.Run(User.LogOff);
     }
 
-    public async Task<SilksongVersionInfo> GetProductInfoAsync()
+    public async Task<HollowKnightVersionInfo> GetProductInfoAsync()
     {
         SteamApps.PICSTokensCallback tokenResult = await Apps.PICSGetAccessTokens(APP_ID, null);
         ulong token = tokenResult.AppTokens.TryGetValue(APP_ID, out ulong t)
             ? t
-            : throw new SteamClientException("Could not get PICS token for Silksong, do you own the game?");
+            : throw new SteamClientException("Could not get PICS token for HollowKnight, do you own the game?");
 
         SteamApps.PICSRequest request = new SteamApps.PICSRequest(APP_ID, token);
         AsyncJobMultiple<SteamApps.PICSProductInfoCallback>.ResultSet productInfoResult = await Apps.PICSGetProductInfo(request, null);
@@ -85,14 +85,14 @@ internal class SteamClientWrapper
             .FirstOrDefault(a => a.ID == APP_ID);
         if (appInfo == null)
         {
-            throw new SteamClientException("Steam did not return any app info for Silksong.");
+            throw new SteamClientException("Steam did not return any app info for HollowKnight.");
         }
         LogKeyValues(appInfo.KeyValues);
 
         KeyValue depots = appInfo.KeyValues["depots"];
-        ulong winManifestId = depots[SilksongVersionInfo.STEAM_DEPOT_ID_WINDOWS.ToString()]["manifests"]["public"]["gid"].AsUnsignedLong();
-        ulong macManifestId = depots[SilksongVersionInfo.STEAM_DEPOT_ID_MAC.ToString()]["manifests"]["public"]["gid"].AsUnsignedLong();
-        ulong linuxManifestId = depots[SilksongVersionInfo.STEAM_DEPOT_ID_LINUX.ToString()]["manifests"]["public"]["gid"].AsUnsignedLong();
+        ulong winManifestId = depots[HollowKnightVersionInfo.STEAM_DEPOT_ID_WINDOWS.ToString()]["manifests"]["public"]["gid"].AsUnsignedLong();
+        ulong macManifestId = depots[HollowKnightVersionInfo.STEAM_DEPOT_ID_MAC.ToString()]["manifests"]["public"]["gid"].AsUnsignedLong();
+        ulong linuxManifestId = depots[HollowKnightVersionInfo.STEAM_DEPOT_ID_LINUX.ToString()]["manifests"]["public"]["gid"].AsUnsignedLong();
         return new()
         {
             Version = "UNKNOWN",

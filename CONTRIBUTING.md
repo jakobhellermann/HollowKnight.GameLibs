@@ -19,8 +19,8 @@ in all of the example commands below.
 
 The following parameters are supported in all build targets except for Clean:
 
-- `--target-silksong-versions`: The versions of Silksong to run the command for. Multiple versions can be specified separated
-                                by spaces, e.g. `--target-silksong-versions 1.0.29980 1.0.30000`. If not specified, the command
+- `--target-hollowKnight-versions`: The versions of HollowKnight to run the command for. Multiple versions can be specified separated
+                                by spaces, e.g. `--target-hollowKnight-versions 1.0.29980 1.0.30000`. If not specified, the command
                                 will run for all known versions.
 - `--dry-run`: Treats the build as a dryrun build. Actions will be logged, but not performed. This is helpful for testing and
                verification purposes
@@ -47,7 +47,7 @@ There are also less-secure ways to enter secrets, should you choose to do so:
 ### Preparing game files
 
 If adding support for a new patch, the first step is to record the version and manifest IDs for each depot at that version
-in `build/SilksongVersionInfo.cs`.
+in `build/HollowKnightVersionInfo.cs`.
 - For the latest patch, run `nuke get-current-version-info`. This will retrieve the latest manifests and game version without
   needing to open the game.
 - For older patches, use [SteamDB](https://steamdb.info/app/1030300/patchnotes/) to find the patch corresponding to the release
@@ -57,7 +57,7 @@ in `build/SilksongVersionInfo.cs`.
 Game files can be downloaded using `nuke download-depots`. This will prompt you to log into Steam. You must own the game on
 Steam to use this tooling. By default, a Steam Guard QR code will be generated to log in without typing your username and password.
 Using a QR code is the most secure way to log in to Steam if possible, as the credentials are never stored outside program memory
-and therefore cannot be leaked. If QR code login is not available (e.g. because of https://github.com/silksong-modding/Silksong.GameLibs/issues/16)
+and therefore cannot be leaked. If QR code login is not available (e.g. because of https://github.com/hollowKnight-modding/HollowKnight.GameLibs/issues/16)
 the secret parameters `--steam-user` and `--steam-password` can be used to log in by credentials, which is especially useful if
 you do not have 2FA/Steam Guard. See the section about secret management above for best practices.
 

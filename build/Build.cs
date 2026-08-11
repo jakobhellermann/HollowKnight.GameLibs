@@ -26,10 +26,10 @@ partial class Build : FalloutBuild
 
     public static int Main() => Execute<Build>(x => x.Package);
 
-    [Parameter("Target Silksong versions",
-        ValueProviderType = typeof(SilksongVersionInfo),
-        ValueProviderMember = nameof(SilksongVersionInfo.AllVersionStrings))]
-    readonly SilksongVersionInfo[] TargetSilksongVersions;
+    [Parameter("Target HollowKnight versions",
+        ValueProviderType = typeof(HollowKnightVersionInfo),
+        ValueProviderMember = nameof(HollowKnightVersionInfo.AllVersionStrings))]
+    readonly HollowKnightVersionInfo[] TargetHollowKnightVersions;
 
     [Parameter("Whether to treat the build as a dryrun. Actions will be logged but not performed.")]
     readonly bool DryRun;
@@ -59,7 +59,7 @@ partial class Build : FalloutBuild
         .Description("Builds NuGet packages for the specified game versions. If no versions are specified, all versions will be build.")
         .Executes(() =>
         {
-            IEnumerable<SilksongVersionInfo> targetVersions = GetTargetVersions();
+            IEnumerable<HollowKnightVersionInfo> targetVersions = GetTargetVersions();
             Log.Information("Packaging for target versions {Versions}", string.Join(", ", targetVersions));
             if (DryRun)
             {
@@ -68,12 +68,12 @@ partial class Build : FalloutBuild
             }
 
             DotNetTasks.DotNetPack(_ => _
-                .SetProject(Solution.Silksong_GameLibs.RelativePath)
+                .SetProject(Solution.HollowKnight_GameLibs.RelativePath)
                 .SetConfiguration("Release")
                 .CombineWith(targetVersions, (_, v) => _
                     .SetProperty("BaseIntermediateOutputPath", $"{ObjDir / v}/")
                     .SetProperty("BaseOutputPath", $"{BinDir / v}/")
-                    .SetProperty("TargetSilksongVersion", v)),
+                    .SetProperty("TargetHollowKnightVersion", v)),
                 degreeOfParallelism: 8
             );
         });
@@ -97,7 +97,7 @@ partial class Build : FalloutBuild
                 return null;
             });
 
-            IEnumerable<SilksongVersionInfo> targetVersions = GetTargetVersions();
+            IEnumerable<HollowKnightVersionInfo> targetVersions = GetTargetVersions();
             Log.Information("On main branch, up to date with origin/main, and no uncommitted changes.");
             Log.Information("Publishing for target versions {Versions}", string.Join(", ", targetVersions));
 
@@ -122,14 +122,14 @@ partial class Build : FalloutBuild
         .Before(Package)
         .Executes(async () =>
         {
-            IEnumerable<SilksongVersionInfo> targetVersions = GetTargetVersions();
+            IEnumerable<HollowKnightVersionInfo> targetVersions = GetTargetVersions();
             Log.Information("Downloading game files for target versions {Versions}", string.Join(", ", targetVersions));
 
             SteamClientWrapper clientWrapper = new();
 
             await clientWrapper.ConnectAndLoginAsync(SteamUser, SteamPassword);
 
-            uint depotId = SilksongVersionInfo.STEAM_DEPOT_ID_WINDOWS;
+            uint depotId = HollowKnightVersionInfo.STEAM_DEPOT_ID_WINDOWS;
 
             if (DryRun)
             {
@@ -162,7 +162,7 @@ partial class Build : FalloutBuild
                     file.FileName = file.FileName.Replace('\\', '/');
                     if (ManagedPathMatcher().IsMatch(file.FileName))
                     {
-                        string relativePath = Path.GetRelativePath("Hollow Knight Silksong_Data/Managed", Path.TrimEndingDirectorySeparator(file.FileName));
+                        string relativePath = Path.GetRelativePath("Hollow Knight HollowKnight_Data/Managed", Path.TrimEndingDirectorySeparator(file.FileName));
                         AbsolutePath intermediatePath = intermediateDir / relativePath;
                         Log.Information("{Version}: Downloading {File} to {Path}", v, relativePath, intermediatePath);
 
@@ -184,19 +184,19 @@ partial class Build : FalloutBuild
         });
 
     Target GetCurrentVersionInfo => _ => _
-        .Description("Uses Steam to get the version info (manifest info and game version) for the latest version of Silksong")
+        .Description("Uses Steam to get the version info (manifest info and game version) for the latest version of HollowKnight")
         .Executes(async () =>
         {
             SteamClientWrapper clientWrapper = new();
             await clientWrapper.ConnectAndLoginAsync(SteamUser, SteamPassword);
 
-            SilksongVersionInfo versionInfo = await clientWrapper.GetProductInfoAsync();
+            HollowKnightVersionInfo versionInfo = await clientWrapper.GetProductInfoAsync();
             Log.Information("Got manifest details for latest version: {Info}", versionInfo.ToDetailedString());
 
-            uint depotId = SilksongVersionInfo.STEAM_DEPOT_ID_WINDOWS;
+            uint depotId = HollowKnightVersionInfo.STEAM_DEPOT_ID_WINDOWS;
             DepotManifest manifest = await clientWrapper.GetManifestAsync(depotId, versionInfo.WindowsManifestId);
 
-            DepotManifest.FileData ggm = manifest.Files.FirstOrDefault(f => f.FileName.Replace('\\', '/').Equals("Hollow Knight Silksong_Data/globalgamemanagers"));
+            DepotManifest.FileData ggm = manifest.Files.FirstOrDefault(f => f.FileName.Replace('\\', '/').Equals("Hollow Knight HollowKnight_Data/globalgamemanagers"));
             Assert.NotNull(ggm, "Failed to find globalgamemanagers file in manifest");
             using MemoryStream ms = new();
             await clientWrapper.DownloadFileAsync(depotId, ggm, ms);
@@ -220,7 +220,7 @@ partial class Build : FalloutBuild
             Assert.NotNullOrEmpty(gameVersion, "Game version not present in globalgamemanagers");
 
             versionInfo = versionInfo with { Version = gameVersion };
-            SilksongVersionInfo existingRecord = SilksongVersionInfo.AllVersions.FirstOrDefault(v => v.Version == gameVersion);
+            HollowKnightVersionInfo existingRecord = HollowKnightVersionInfo.AllVersions.FirstOrDefault(v => v.Version == gameVersion);
             if (existingRecord == null)
             {
                 Log.Information("Found untracked game version: {Info}", versionInfo.ToDetailedString());
@@ -239,11 +239,11 @@ partial class Build : FalloutBuild
             }
         });
 
-    private IEnumerable<SilksongVersionInfo> GetTargetVersions()
+    private IEnumerable<HollowKnightVersionInfo> GetTargetVersions()
     {
-        return TargetSilksongVersions != null && TargetSilksongVersions.Length > 0
-            ? TargetSilksongVersions
-            : SilksongVersionInfo.AllVersions;
+        return TargetHollowKnightVersions != null && TargetHollowKnightVersions.Length > 0
+            ? TargetHollowKnightVersions
+            : HollowKnightVersionInfo.AllVersions;
     }
 
     private bool IsEmptyOrAbsentDirectory(AbsolutePath path)
@@ -269,6 +269,6 @@ partial class Build : FalloutBuild
         return true;
     }
 
-    [GeneratedRegex(@"^Hollow Knight Silksong_Data/Managed/.+$")]
+    [GeneratedRegex(@"^Hollow Knight HollowKnight_Data/Managed/.+$")]
     private static partial Regex ManagedPathMatcher();
 }

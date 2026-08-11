@@ -10,17 +10,17 @@ using System.Text;
 namespace _build;
 
 [TypeConverter(typeof(Converter))]
-public record SilksongVersionInfo
+public record HollowKnightVersionInfo
 {
     public const uint STEAM_APPID = 1030300;
     public const uint STEAM_DEPOT_ID_WINDOWS = 1030301;
     public const uint STEAM_DEPOT_ID_MAC = 1030302;
     public const uint STEAM_DEPOT_ID_LINUX = 1030303;
 
-    public static IEnumerable<SilksongVersionInfo> AllVersions => [
-        .. typeof(SilksongVersionInfo).GetFields(BindingFlags.Public | BindingFlags.Static)
-            .Where(x => x.FieldType == typeof(SilksongVersionInfo))
-            .Select(x => (SilksongVersionInfo)x.GetValue(null))
+    public static IEnumerable<HollowKnightVersionInfo> AllVersions => [
+        .. typeof(HollowKnightVersionInfo).GetFields(BindingFlags.Public | BindingFlags.Static)
+            .Where(x => x.FieldType == typeof(HollowKnightVersionInfo))
+            .Select(x => (HollowKnightVersionInfo)x.GetValue(null))
     ];
     public static IEnumerable<string> AllVersionStrings => AllVersions.Select(x => x.Version);
 
@@ -29,7 +29,7 @@ public record SilksongVersionInfo
     public required ulong MacManifestId { get; init; }
     public required ulong LinuxManifestId { get; init; }
 
-    public static readonly SilksongVersionInfo _1_0_28324 = new()
+    public static readonly HollowKnightVersionInfo _1_0_28324 = new()
     {
         Version = "1.0.28324",
         WindowsManifestId = 3229726349000518284,
@@ -37,7 +37,7 @@ public record SilksongVersionInfo
         LinuxManifestId = 8384590172287463475
     };
 
-    public static readonly SilksongVersionInfo _1_0_28497 = new()
+    public static readonly HollowKnightVersionInfo _1_0_28497 = new()
     {
         Version = "1.0.28497",
         WindowsManifestId = 539129767115354441,
@@ -45,7 +45,7 @@ public record SilksongVersionInfo
         LinuxManifestId = 6701825740120558137
     };
 
-    public static readonly SilksongVersionInfo _1_0_28561 = new()
+    public static readonly HollowKnightVersionInfo _1_0_28561 = new()
     {
         Version = "1.0.28561",
         WindowsManifestId = 8642535143474926050,
@@ -53,7 +53,7 @@ public record SilksongVersionInfo
         LinuxManifestId = 6373658714389144408
     };
 
-    public static readonly SilksongVersionInfo _1_0_28650 = new()
+    public static readonly HollowKnightVersionInfo _1_0_28650 = new()
     {
         Version = "1.0.28650",
         WindowsManifestId = 3900764848237536293,
@@ -64,7 +64,7 @@ public record SilksongVersionInfo
     // note: win and mac have the patch for CVE-2025-59489 on 2025-10-03.
     //       linux did not get the patch and is on the release from 2025-09-24.
     //       the CVE patch contains no other changes aside from the patch.
-    public static readonly SilksongVersionInfo _1_0_28714 = new()
+    public static readonly HollowKnightVersionInfo _1_0_28714 = new()
     {
         Version = "1.0.28714",
         WindowsManifestId = 5977483240701257214,
@@ -72,7 +72,7 @@ public record SilksongVersionInfo
         LinuxManifestId = 1617544312110692774
     };
 
-    public static readonly SilksongVersionInfo _1_0_28891 = new()
+    public static readonly HollowKnightVersionInfo _1_0_28891 = new()
     {
         Version = "1.0.28891",
         WindowsManifestId = 3690203822520536668,
@@ -80,7 +80,7 @@ public record SilksongVersionInfo
         LinuxManifestId = 5954103139200615141
     };
 
-    public static readonly SilksongVersionInfo _1_0_29242 = new()
+    public static readonly HollowKnightVersionInfo _1_0_29242 = new()
     {
         Version = "1.0.29242",
         WindowsManifestId = 426651197780377263,
@@ -88,7 +88,7 @@ public record SilksongVersionInfo
         LinuxManifestId = 8078874762924599313
     };
 
-    public static readonly SilksongVersionInfo _1_0_29315 = new()
+    public static readonly HollowKnightVersionInfo _1_0_29315 = new()
     {
         Version = "1.0.29315",
         WindowsManifestId = 3545882420322545098,
@@ -96,7 +96,7 @@ public record SilksongVersionInfo
         LinuxManifestId = 4349246050376532986
     };
 
-    public static readonly SilksongVersionInfo _1_0_29909 = new()
+    public static readonly HollowKnightVersionInfo _1_0_29909 = new()
     {
         Version = "1.0.29909",
         WindowsManifestId = 3853982342899707391,
@@ -104,7 +104,7 @@ public record SilksongVersionInfo
         LinuxManifestId = 2218100490558811317
     };
 
-    public static readonly SilksongVersionInfo _1_0_29926 = new()
+    public static readonly HollowKnightVersionInfo _1_0_29926 = new()
     {
         Version = "1.0.29926",
         WindowsManifestId = 3703686001292550981,
@@ -112,7 +112,7 @@ public record SilksongVersionInfo
         LinuxManifestId = 6891565886978421564
     };
 
-    public static readonly SilksongVersionInfo _1_0_29980 = new()
+    public static readonly HollowKnightVersionInfo _1_0_29980 = new()
     {
         Version = "1.0.29980",
         WindowsManifestId = 468692862190470536,
@@ -120,7 +120,7 @@ public record SilksongVersionInfo
         LinuxManifestId = 7780372375671997910
     };
 
-    public static readonly SilksongVersionInfo _1_0_30000 = new()
+    public static readonly HollowKnightVersionInfo _1_0_30000 = new()
     {
         Version = "1.0.30000",
         WindowsManifestId = 4421626056705534276,
@@ -137,7 +137,7 @@ public record SilksongVersionInfo
         sb.Append(" }");
         return sb.ToString();
     }
-    public static implicit operator string(SilksongVersionInfo v) => v.Version;
+    public static implicit operator string(HollowKnightVersionInfo v) => v.Version;
 
     public class Converter : TypeConverter
     {
@@ -150,7 +150,7 @@ public record SilksongVersionInfo
         {
             if (value is string str)
             {
-                List<SilksongVersionInfo> matches = [.. AllVersions.Where(v => v.Version == str)];
+                List<HollowKnightVersionInfo> matches = [.. AllVersions.Where(v => v.Version == str)];
                 Assert.HasSingleItem(matches);
                 return matches[0];
             }
