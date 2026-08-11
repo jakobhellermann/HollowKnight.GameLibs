@@ -1,13 +1,13 @@
 using _build;
 using AssetsTools.NET;
 using AssetsTools.NET.Extra;
-using Nuke.Common;
-using Nuke.Common.Git;
-using Nuke.Common.IO;
-using Nuke.Common.ProjectModel;
-using Nuke.Common.Tooling;
-using Nuke.Common.Tools.DotNet;
-using Nuke.Common.Tools.Git;
+using Fallout.Common;
+using Fallout.Common.Git;
+using Fallout.Common.IO;
+using Fallout.Solutions;
+using Fallout.Common.Tooling;
+using Fallout.Common.Tools.DotNet;
+using Fallout.Common.Tools.Git;
 using Serilog;
 using SteamKit2;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-partial class Build : NukeBuild
+partial class Build : FalloutBuild
 {
     [Solution(GenerateProjects = true)]
     readonly Solution Solution;
