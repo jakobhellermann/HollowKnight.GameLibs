@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace _build;
 
@@ -28,6 +27,8 @@ public record HollowKnightVersionInfo
     public required ulong WindowsManifestId { get; init; }
     public required ulong MacManifestId { get; init; }
     public required ulong LinuxManifestId { get; init; }
+
+    public DepotManifestIds Manifests => new(WindowsManifestId, MacManifestId, LinuxManifestId);
 
     public static readonly HollowKnightVersionInfo _1_2_2_1 = new()
     {
@@ -62,14 +63,6 @@ public record HollowKnightVersionInfo
     };
 
     public sealed override string ToString() => Version;
-    public string ToDetailedString()
-    {
-        StringBuilder sb = new();
-        sb.Append("{ ");
-        PrintMembers(sb);
-        sb.Append(" }");
-        return sb.ToString();
-    }
     public static implicit operator string(HollowKnightVersionInfo v) => v.Version;
 
     public class Converter : TypeConverter

@@ -190,11 +190,11 @@ partial class Build : FalloutBuild
             SteamClientWrapper clientWrapper = new();
             await clientWrapper.ConnectAndLoginAsync(SteamUser, SteamPassword);
 
-            HollowKnightVersionInfo versionInfo = await clientWrapper.GetProductInfoAsync();
-            Log.Information("Got manifest details for latest version: {Info}", versionInfo.ToDetailedString());
+            DepotManifestIds manifestIds = await clientWrapper.GetProductInfoAsync();
+            Log.Information("Got manifest details for latest version: {Info}", manifestIds);
 
             uint depotId = HollowKnightVersionInfo.STEAM_DEPOT_ID_WINDOWS;
-            DepotManifest manifest = await clientWrapper.GetManifestAsync(depotId, versionInfo.WindowsManifestId);
+            DepotManifest manifest = await clientWrapper.GetManifestAsync(depotId, manifestIds.Windows);
 
             DepotManifest.FileData ggm = manifest.Files.FirstOrDefault(f => f.FileName.Replace('\\', '/').Equals("hollow_knight_Data/globalgamemanagers"));
             Assert.NotNull(ggm, "Failed to find globalgamemanagers file in manifest");
@@ -219,23 +219,22 @@ partial class Build : FalloutBuild
             string gameVersion = psBase["bundleVersion"]?.AsString;
             Assert.NotNullOrEmpty(gameVersion, "Game version not present in globalgamemanagers");
 
-            versionInfo = versionInfo with { Version = gameVersion };
             HollowKnightVersionInfo existingRecord = HollowKnightVersionInfo.AllVersions.FirstOrDefault(v => v.Version == gameVersion);
             if (existingRecord == null)
             {
-                Log.Information("Found untracked game version: {Info}", versionInfo.ToDetailedString());
+                Log.Information("Found untracked game version {Version}: {Info}", gameVersion, manifestIds);
             }
-            else if (existingRecord != versionInfo)
+            else if (existingRecord.Manifests != manifestIds)
             {
                 Log.Warning(
                     "Found conflict between tracked version {Existing} and new version {Info}",
-                    existingRecord.ToDetailedString(),
-                    versionInfo.ToDetailedString()
+                    existingRecord.Manifests,
+                    manifestIds
                 );
             }
             else
             {
-                Log.Information("All up to date for latest version: {Info}", versionInfo.ToDetailedString());
+                Log.Information("All up to date for latest version {Version}: {Info}", gameVersion, manifestIds);
             }
         });
 

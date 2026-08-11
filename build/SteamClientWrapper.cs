@@ -14,6 +14,8 @@ using CDN = SteamKit2.CDN;
 
 namespace _build;
 
+public record DepotManifestIds(ulong Windows, ulong Mac, ulong Linux);
+
 
 [Serializable]
 public class SteamClientException : Exception
@@ -71,7 +73,7 @@ internal class SteamClientWrapper
         return Task.Run(User.LogOff);
     }
 
-    public async Task<HollowKnightVersionInfo> GetProductInfoAsync()
+    public async Task<DepotManifestIds> GetProductInfoAsync()
     {
         SteamApps.PICSTokensCallback tokenResult = await Apps.PICSGetAccessTokens(APP_ID, null);
         ulong token = tokenResult.AppTokens.TryGetValue(APP_ID, out ulong t)
@@ -93,13 +95,7 @@ internal class SteamClientWrapper
         ulong winManifestId = depots[HollowKnightVersionInfo.STEAM_DEPOT_ID_WINDOWS.ToString()]["manifests"]["public"]["gid"].AsUnsignedLong();
         ulong macManifestId = depots[HollowKnightVersionInfo.STEAM_DEPOT_ID_MAC.ToString()]["manifests"]["public"]["gid"].AsUnsignedLong();
         ulong linuxManifestId = depots[HollowKnightVersionInfo.STEAM_DEPOT_ID_LINUX.ToString()]["manifests"]["public"]["gid"].AsUnsignedLong();
-        return new()
-        {
-            Version = "UNKNOWN",
-            WindowsManifestId = winManifestId,
-            MacManifestId = macManifestId,
-            LinuxManifestId = linuxManifestId,
-        };
+        return new DepotManifestIds(winManifestId, macManifestId, linuxManifestId);
     }
 
     private void LogKeyValues(KeyValue kv, int indent = 0)
