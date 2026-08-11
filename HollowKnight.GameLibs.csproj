@@ -6,7 +6,13 @@
   </Target>
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <!-- net35 can only use net35 https://nugettools.azurewebsites.net/7.6.0/get-nearest-framework?project=net35&package=net35 -->
+    <!-- net472+ also supports netstandard2.0 -->
+    <!-- netstandard2.x don't support netXXX -->
+    <!-- a net35-built mod doesn't run on Unity 6 -->
+    <TargetFrameworks>netstandard2.1;net472</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(TargetHollowKnightVersion)' == '1.5.78.11833' ">net35;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks Condition=" '$(TargetHollowKnightVersion)' == '1.2.2.1' Or '$(TargetHollowKnightVersion)' == '1.4.3.2' ">net35</TargetFrameworks>
     <PackageVersion>1.2.0-hollowKnight$(TargetHollowKnightVersion)</PackageVersion>
     <Authors>BadMagic</Authors>
     <Description>The game libraries used for modding Hollow Knight: HollowKnight</Description>
@@ -52,9 +58,18 @@
 
   <ItemGroup>
     <Compile Remove="**/*" />
-    <!-- System files are excluded because users don't need them. Game files are excluded because we will strip/publicize and include that instead-->
-    <Content Include="ref/$(TargetHollowKnightVersion)/*" Exclude="@(SystemFiles);@(GameFiles)" Pack="True" PackagePath="ref/$(TargetFramework)" />
   </ItemGroup>
+
+  <PropertyGroup>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);AddGameLibsToPackage</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+  <Target Name="AddGameLibsToPackage" DependsOnTargets="StripAndPublicize">
+    <ItemGroup>
+      <!-- System files are excluded because users don't need them. Game files are excluded because the stripped/publicized copies go in instead -->
+      <TfmSpecificPackageFile Include="ref/$(TargetHollowKnightVersion)/*" Exclude="@(SystemFiles);@(GameFiles)" PackagePath="ref/$(TargetFramework)" />
+      <TfmSpecificPackageFile Include="@(PublicizedReferences)" PackagePath="ref/$(TargetFramework)" />
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <!--Exclude nuke build files-->
@@ -72,10 +87,6 @@
     <PublicizeTask IntermediateOutputPath="$(IntermediateOutputPath)" GeneratedIgnoresAccessChecksToFile="$(GeneratedIgnoresAccessChecksToFile)" ReferencePath="@(GameFiles)" PackageReference="" Publicize="">
         <Output TaskParameter="PublicizedReferences" ItemName="PublicizedReferences" />
     </PublicizeTask>
-
-    <ItemGroup>
-      <Content Include="@(PublicizedReferences)" Pack="true" PackagePath="ref/$(TargetFramework)" />
-    </ItemGroup>
   </Target>
 
   <!-- 
