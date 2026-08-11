@@ -12,10 +12,10 @@ namespace _build;
 [TypeConverter(typeof(Converter))]
 public record HollowKnightVersionInfo
 {
-    public const uint STEAM_APPID = 1030300;
-    public const uint STEAM_DEPOT_ID_WINDOWS = 1030301;
-    public const uint STEAM_DEPOT_ID_MAC = 1030302;
-    public const uint STEAM_DEPOT_ID_LINUX = 1030303;
+    public const uint STEAM_APPID = 367520;
+    public const uint STEAM_DEPOT_ID_WINDOWS = 367521;
+    public const uint STEAM_DEPOT_ID_MAC = 367522;
+    public const uint STEAM_DEPOT_ID_LINUX = 367523;
 
     public static IEnumerable<HollowKnightVersionInfo> AllVersions => [
         .. typeof(HollowKnightVersionInfo).GetFields(BindingFlags.Public | BindingFlags.Static)
@@ -29,103 +29,36 @@ public record HollowKnightVersionInfo
     public required ulong MacManifestId { get; init; }
     public required ulong LinuxManifestId { get; init; }
 
-    public static readonly HollowKnightVersionInfo _1_0_28324 = new()
+    public static readonly HollowKnightVersionInfo _1_2_2_1 = new()
     {
-        Version = "1.0.28324",
-        WindowsManifestId = 3229726349000518284,
-        MacManifestId = 1365730835793684614,
-        LinuxManifestId = 8384590172287463475
+        Version = "1.2.2.1",
+        WindowsManifestId = 648876203478229944,
+        MacManifestId = 9202392574951903457,
+        LinuxManifestId = 8836863544523989656
     };
 
-    public static readonly HollowKnightVersionInfo _1_0_28497 = new()
+    public static readonly HollowKnightVersionInfo _1_4_3_2 = new()
     {
-        Version = "1.0.28497",
-        WindowsManifestId = 539129767115354441,
-        MacManifestId = 8670159430480702509,
-        LinuxManifestId = 6701825740120558137
+        Version = "1.4.3.2",
+        WindowsManifestId = 7100970131266256005,
+        MacManifestId = 3397268605819178029,
+        LinuxManifestId = 4631363637747835650
     };
 
-    public static readonly HollowKnightVersionInfo _1_0_28561 = new()
+    public static readonly HollowKnightVersionInfo _1_5_78_11833 = new()
     {
-        Version = "1.0.28561",
-        WindowsManifestId = 8642535143474926050,
-        MacManifestId = 9022715293716759452,
-        LinuxManifestId = 6373658714389144408
+        Version = "1.5.78.11833",
+        WindowsManifestId = 4539921744901848404,
+        MacManifestId = 7770537498842372731,
+        LinuxManifestId = 5829533265112705522
     };
 
-    public static readonly HollowKnightVersionInfo _1_0_28650 = new()
+    public static readonly HollowKnightVersionInfo _1_5_12620 = new()
     {
-        Version = "1.0.28650",
-        WindowsManifestId = 3900764848237536293,
-        MacManifestId = 7832939953657548180,
-        LinuxManifestId = 7495630131038458486
-    };
-
-    // note: win and mac have the patch for CVE-2025-59489 on 2025-10-03.
-    //       linux did not get the patch and is on the release from 2025-09-24.
-    //       the CVE patch contains no other changes aside from the patch.
-    public static readonly HollowKnightVersionInfo _1_0_28714 = new()
-    {
-        Version = "1.0.28714",
-        WindowsManifestId = 5977483240701257214,
-        MacManifestId = 7917356342743942630,
-        LinuxManifestId = 1617544312110692774
-    };
-
-    public static readonly HollowKnightVersionInfo _1_0_28891 = new()
-    {
-        Version = "1.0.28891",
-        WindowsManifestId = 3690203822520536668,
-        MacManifestId = 2374057204384257562,
-        LinuxManifestId = 5954103139200615141
-    };
-
-    public static readonly HollowKnightVersionInfo _1_0_29242 = new()
-    {
-        Version = "1.0.29242",
-        WindowsManifestId = 426651197780377263,
-        MacManifestId = 2058007571598677908,
-        LinuxManifestId = 8078874762924599313
-    };
-
-    public static readonly HollowKnightVersionInfo _1_0_29315 = new()
-    {
-        Version = "1.0.29315",
-        WindowsManifestId = 3545882420322545098,
-        MacManifestId = 7345001466169537628,
-        LinuxManifestId = 4349246050376532986
-    };
-
-    public static readonly HollowKnightVersionInfo _1_0_29909 = new()
-    {
-        Version = "1.0.29909",
-        WindowsManifestId = 3853982342899707391,
-        MacManifestId = 8626896570586771768,
-        LinuxManifestId = 2218100490558811317
-    };
-
-    public static readonly HollowKnightVersionInfo _1_0_29926 = new()
-    {
-        Version = "1.0.29926",
-        WindowsManifestId = 3703686001292550981,
-        MacManifestId = 4837712425280970616,
-        LinuxManifestId = 6891565886978421564
-    };
-
-    public static readonly HollowKnightVersionInfo _1_0_29980 = new()
-    {
-        Version = "1.0.29980",
-        WindowsManifestId = 468692862190470536,
-        MacManifestId = 4899622998101152532,
-        LinuxManifestId = 7780372375671997910
-    };
-
-    public static readonly HollowKnightVersionInfo _1_0_30000 = new()
-    {
-        Version = "1.0.30000",
-        WindowsManifestId = 4421626056705534276,
-        MacManifestId = 4136280015582261500,
-        LinuxManifestId = 7921642076658611197
+        Version = "1.5.12620",
+        WindowsManifestId = 257781644874438846,
+        MacManifestId = 6809616861563627670,
+        LinuxManifestId = 708613018541602983
     };
 
     public sealed override string ToString() => Version;
