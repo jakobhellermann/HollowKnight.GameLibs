@@ -73,7 +73,7 @@ partial class Build : FalloutBuild
                 .CombineWith(targetVersions, (_, v) => _
                     .SetProperty("BaseIntermediateOutputPath", $"{ObjDir / v}/")
                     .SetProperty("BaseOutputPath", $"{BinDir / v}/")
-                    .SetProperty("TargetHollowKnightVersion", v)),
+                    .SetProperty("TargetHollowKnightVersion", v.Version)),
                 degreeOfParallelism: 8
             );
         });
