@@ -12,6 +12,8 @@
     <Description>The game libraries used for modding Hollow Knight: HollowKnight</Description>
     <PackageTags>hollowKnight modding bepinex5</PackageTags>
     <IncludeBuildOutput>False</IncludeBuildOutput>
+    <!-- Fix warnings on net35 (MSB3257/MSB3258) -->
+    <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
     <NoDefaultExcludes>true</NoDefaultExcludes>
     <PackageReadmeFile>doc/README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/BadMagic100/HollowKnight.GameLibs</PackageProjectUrl>
@@ -38,18 +40,14 @@
     <SystemFiles Include="ref/$(TargetHollowKnightVersion)/System*.dll" />
     <SystemFiles Include="ref/$(TargetHollowKnightVersion)/netstandard.dll" />
     <SystemFiles Include="ref/$(TargetHollowKnightVersion)/mscorlib.dll" />
-    <!-- 
-    Included in UnityEngine.Modules package from BepInEx BaGet so we don't need to bundle these.
-    Counterintuitively the "exclude" list is stuff which should be included in the bundle (it is excluded from the list of stuff to remove)
-    because they are not covered by UnityEngine.Modules
-    -->
-    <SystemFiles Include="ref/$(TargetHollowKnightVersion)/UnityEngine*.dll" Exclude="ref/$(TargetHollowKnightVersion)/UnityEngine.AMDModule.dll;ref/$(TargetHollowKnightVersion)/UnityEngine.ARModule.dll;ref/$(TargetHollowKnightVersion)/UnityEngine.NVIDIAModule.dll;ref/$(TargetHollowKnightVersion)/UnityEngine.UI.dll" />
   </ItemGroup>
 
   <ItemGroup>
     <GameFiles Include="ref/$(TargetHollowKnightVersion)/Assembly-CSharp.dll" Publicize="true" Strip="true" />
+    <GameFiles Include="ref/$(TargetHollowKnightVersion)/Assembly-CSharp-firstpass.dll" Publicize="true" Strip="true" />
     <GameFiles Include="ref/$(TargetHollowKnightVersion)/PlayMaker.dll" Publicize="true" Strip="true" />
     <GameFiles Include="ref/$(TargetHollowKnightVersion)/TeamCherry.*.dll" Publicize="true" Strip="true" />
+    <GameFiles Include="ref/$(TargetHollowKnightVersion)/*.dll" Exclude="@(SystemFiles);@(GameFiles)" Publicize="true" PublicizeTarget="None" Strip="true" />
   </ItemGroup>
 
   <ItemGroup>
