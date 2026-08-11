@@ -43,7 +43,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <SystemFiles Include="ref/$(TargetHollowKnightVersion)/System*.dll" />
+    <!-- System.ValueTuple ships 4.0.3.0 while the netstandard2.1 reference pack has 4.0.2.0, so consumers need ours (MSB3277) -->
+    <SystemFiles Include="ref/$(TargetHollowKnightVersion)/System*.dll" Exclude="ref/$(TargetHollowKnightVersion)/System.ValueTuple.dll" />
     <SystemFiles Include="ref/$(TargetHollowKnightVersion)/netstandard.dll" />
     <SystemFiles Include="ref/$(TargetHollowKnightVersion)/mscorlib.dll" />
   </ItemGroup>
