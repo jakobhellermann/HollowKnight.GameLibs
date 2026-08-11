@@ -10,9 +10,12 @@ using Fallout.Common.Tools.DotNet;
 using Fallout.Common.Tools.Git;
 using Serilog;
 using SteamKit2;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Reflection.PortableExecutable;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -45,6 +48,7 @@ partial class Build : FalloutBuild
     readonly AbsolutePath BinDir = RootDirectory / "bin";
     readonly AbsolutePath ObjDir = RootDirectory / "obj";
     readonly AbsolutePath DepotStagingDir = TemporaryDirectory / "depots";
+    readonly AbsolutePath ModdingApiStagingDir = TemporaryDirectory / "moddingapi";
 
     Target Clean => _ => _
         .Before(DownloadDepots, Package, Publish)
@@ -181,6 +185,104 @@ partial class Build : FalloutBuild
             });
 
             await clientWrapper.LogOutAsync();
+        });
+
+    Target DownloadModdingApi => _ => _
+        .Description("Install the Modding API assemblies onto the downloaded game files")
+        .After(DownloadDepots)
+        .Before(Package)
+        .Executes(async () =>
+        {
+            IEnumerable<HollowKnightVersionInfo> targetVersions = GetTargetVersions();
+            Log.Information("Applying Modding API for target versions {Versions}", string.Join(", ", targetVersions));
+
+            foreach (HollowKnightVersionInfo v in targetVersions)
+            {
+                AbsolutePath targetDir = RootDirectory / "ref" / v;
+                Assert.True(targetDir.DirectoryExists(), $"{targetDir} does not exist, run DownloadDepots first");
+
+                AbsolutePath stagingDir = ModdingApiStagingDir / v;
+                stagingDir.CreateOrCleanDirectory();
+
+                AbsolutePath sourceDir = await MaterializeModdingApiAsync(v, stagingDir);
+                if (sourceDir == null)
+                {
+                    continue;
+                }
+
+                int replaced = 0, added = 0;
+                foreach (AbsolutePath file in sourceDir.GlobFiles("**/*.dll").Concat(sourceDir.GlobFiles("**/*.xml")))
+                {
+                    // skip unity_scene_repacker
+                    if (file.Extension == ".dll" && !IsManagedAssembly(file))
+                    {
+                        Log.Information("{Version}: Skipping native library {File}", v, file.Name);
+                        continue;
+                    }
+
+                    AbsolutePath destination = targetDir / file.Name;
+                    if (destination.FileExists())
+                    {
+                        replaced++;
+                    }
+                    else
+                    {
+                        added++;
+                    }
+                    file.Copy(destination, ExistsPolicy.FileOverwrite);
+                }
+
+                Assert.True(replaced + added > 0, $"{v}: Modding API source contained no assemblies, check {v.ModdingApi}");
+                Log.Information("{Version}: replaced {Replaced} and added {Added} files from the Modding API", v, replaced, added);
+            }
+        });
+
+    private static bool IsManagedAssembly(AbsolutePath path)
+    {
+        using FileStream stream = File.OpenRead(path);
+        using PEReader reader = new(stream);
+        return reader.HasMetadata;
+    }
+
+    /// Returns the directory holding the Modding API files, or null in dryrun mode.
+    private async Task<AbsolutePath> MaterializeModdingApiAsync(HollowKnightVersionInfo v, AbsolutePath stagingDir)
+    {
+        switch (v.ModdingApi)
+        {
+            case ModdingApiSource.Zip zip:
+                Log.Information("{Version}: Downloading {Url}", v, zip.Url);
+                if (DryRun)
+                {
+                    return null;
+                }
+                AbsolutePath archive = stagingDir / "moddingapi.zip";
+                await DownloadAsync(zip.Url, archive);
+                AbsolutePath extracted = stagingDir / "extracted";
+                await ZipFile.ExtractToDirectoryAsync(archive, extracted);
+                return extracted;
+
+            case ModdingApiSource.Assembly assembly:
+                Log.Information("{Version}: Downloading {Url}", v, assembly.Url);
+                if (DryRun)
+                {
+                    return null;
+                }
+                AbsolutePath single = stagingDir / "extracted";
+                single.CreateDirectory();
+                await DownloadAsync(assembly.Url, single / Path.GetFileName(new Uri(assembly.Url).LocalPath));
+                return single;
+
+            default:
+                throw new NotSupportedException($"Unhandled Modding API source {v.ModdingApi.GetType().Name}");
+        }
+    }
+
+    // Increase timeout from 5s
+    private static Task DownloadAsync(string url, AbsolutePath path) =>
+        HttpTasks.HttpDownloadFileAsync(url, path, clientConfigurator: client =>
+        {
+            client.Timeout = TimeSpan.FromMinutes(10);
+            return client;
         });
 
     Target GetCurrentVersionInfo => _ => _
