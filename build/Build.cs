@@ -162,7 +162,7 @@ partial class Build : FalloutBuild
                     file.FileName = file.FileName.Replace('\\', '/');
                     if (ManagedPathMatcher().IsMatch(file.FileName))
                     {
-                        string relativePath = Path.GetRelativePath("Hollow Knight HollowKnight_Data/Managed", Path.TrimEndingDirectorySeparator(file.FileName));
+                        string relativePath = Path.GetRelativePath("hollow_knight_Data/Managed", Path.TrimEndingDirectorySeparator(file.FileName));
                         AbsolutePath intermediatePath = intermediateDir / relativePath;
                         Log.Information("{Version}: Downloading {File} to {Path}", v, relativePath, intermediatePath);
 
@@ -196,7 +196,7 @@ partial class Build : FalloutBuild
             uint depotId = HollowKnightVersionInfo.STEAM_DEPOT_ID_WINDOWS;
             DepotManifest manifest = await clientWrapper.GetManifestAsync(depotId, versionInfo.WindowsManifestId);
 
-            DepotManifest.FileData ggm = manifest.Files.FirstOrDefault(f => f.FileName.Replace('\\', '/').Equals("Hollow Knight HollowKnight_Data/globalgamemanagers"));
+            DepotManifest.FileData ggm = manifest.Files.FirstOrDefault(f => f.FileName.Replace('\\', '/').Equals("hollow_knight_Data/globalgamemanagers"));
             Assert.NotNull(ggm, "Failed to find globalgamemanagers file in manifest");
             using MemoryStream ms = new();
             await clientWrapper.DownloadFileAsync(depotId, ggm, ms);
@@ -269,6 +269,6 @@ partial class Build : FalloutBuild
         return true;
     }
 
-    [GeneratedRegex(@"^Hollow Knight HollowKnight_Data/Managed/.+$")]
+    [GeneratedRegex(@"^hollow_knight_Data/Managed/.+$")]
     private static partial Regex ManagedPathMatcher();
 }

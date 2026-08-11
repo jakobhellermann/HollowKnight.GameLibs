@@ -1,1 +1,1 @@
-regex:Hollow Knight HollowKnight_Data/Managed/.*
+regex:hollow_knight_Data/Managed/.*
