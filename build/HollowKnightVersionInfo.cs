@@ -49,6 +49,17 @@ public record HollowKnightVersionInfo
             "https://raw.githubusercontent.com/hk-speedrunning/HK-Resources/main/Mods/1221/Modding%20API/Assembly-CSharp.dll")
     };
 
+    public static readonly HollowKnightVersionInfo _1_3_1_5 = new()
+    {
+        Version = "1.3.1.5",
+        WindowsManifestId = 8301828894387332581,
+        MacManifestId = 1471981400949629036,
+        LinuxManifestId = 1555254915653464477,
+        // There is no upstream release for 1.3.1.5; this is the hksr backport of 1.5 api, v74 same as 1.4.3.2.
+        ModdingApi = new ModdingApiSource.Zip(
+            "https://github.com/pikachupower3/hk-modding-api/releases/download/1.3.1.5-74/OutputFinal.zip")
+    };
+
     public static readonly HollowKnightVersionInfo _1_4_3_2 = new()
     {
         Version = "1.4.3.2",
