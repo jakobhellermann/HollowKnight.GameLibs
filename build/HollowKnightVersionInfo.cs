@@ -55,8 +55,10 @@ public record HollowKnightVersionInfo
         WindowsManifestId = 7100970131266256005,
         MacManifestId = 3397268605819178029,
         LinuxManifestId = 4631363637747835650,
+        // Not using the old mapi build https://github.com/hk-modding/api/releases/download/1.4.3.2-60/Windows.zip:
+        // The hk speedrunning backport contains monomod, hookgen, subdir layout for mods, etc.
         ModdingApi = new ModdingApiSource.Zip(
-            "https://github.com/hk-modding/api/releases/download/1.4.3.2-60/Windows.zip")
+            "https://raw.githubusercontent.com/hk-speedrunning/HK-Resources/main/Mods/1432/Backport/Modding%20API/API.zip") // v74 backport
     };
 
     public static readonly HollowKnightVersionInfo _1_5_78_11833 = new()
