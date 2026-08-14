@@ -15,15 +15,15 @@
     <TargetFrameworks Condition=" '$(TargetHollowKnightVersion)' == '1.5.78.11833' ">net35;netstandard2.0</TargetFrameworks>
     <TargetFrameworks Condition=" '$(TargetHollowKnightVersion)' == '1.2.2.1' Or '$(TargetHollowKnightVersion)' == '1.3.1.5' Or '$(TargetHollowKnightVersion)' == '1.4.3.2' ">net35</TargetFrameworks>
     <PackageVersion>1.0.0-hollowknight.$(TargetHollowKnightVersion).api$(TargetModdingApiVersion)</PackageVersion>
-    <Authors>BadMagic</Authors>
-    <Description>The game libraries used for modding Hollow Knight: HollowKnight</Description>
-    <PackageTags>hollowKnight modding bepinex5</PackageTags>
+    <Authors>BadMagic100, jakobhellermann</Authors>
+    <Description>The game libraries + modding API for modding Hollow Knight</Description>
+    <PackageTags>hollowknight modding</PackageTags>
     <IncludeBuildOutput>False</IncludeBuildOutput>
     <!-- Fix warnings on net35 (MSB3257/MSB3258) -->
     <DisableImplicitFrameworkReferences>true</DisableImplicitFrameworkReferences>
     <NoDefaultExcludes>true</NoDefaultExcludes>
     <PackageReadmeFile>doc/README.md</PackageReadmeFile>
-    <PackageProjectUrl>https://github.com/BadMagic100/HollowKnight.GameLibs</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/jakobhellermann/HollowKnight.GameLibs</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <!--
     NuGet complains about using the /ref/ path in packages because it doesn't work for projects using packages.config.
