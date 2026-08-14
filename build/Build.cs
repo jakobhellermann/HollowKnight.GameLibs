@@ -40,6 +40,9 @@ partial class Build : FalloutBuild
     [Secret, Parameter("The NuGet API key to use for publishing")]
     readonly string NuGetApiKey;
 
+    [Parameter("The NuGet feed to publish to. Defaults to nuget.org.")]
+    readonly string NuGetSource = "https://api.nuget.org/v3/index.json";
+
     [Secret, Parameter("Steam username for downloading game files. If either username or password is absent, QR login will be used.")]
     readonly string SteamUser;
     [Secret, Parameter("Steam password for downloading game files. If either username or password is absent, QR login will be used.")]
@@ -104,7 +107,7 @@ partial class Build : FalloutBuild
 
             IEnumerable<HollowKnightVersionInfo> targetVersions = GetTargetVersions();
             Log.Information("On main branch, up to date with origin/main, and no uncommitted changes.");
-            Log.Information("Publishing for target versions {Versions}", string.Join(", ", targetVersions));
+            Log.Information("Publishing {Versions} to {Source}", string.Join(", ", targetVersions), NuGetSource);
 
             if (DryRun)
             {
@@ -113,7 +116,7 @@ partial class Build : FalloutBuild
             }
             IEnumerable<AbsolutePath> packages = targetVersions.Select(v => BinDir / v).SelectMany(x => x.GlobFiles("**/*.nupkg"));
             DotNetTasks.DotNetNuGetPush(_ => _
-                .SetSource("https://api.nuget.org/v3/index.json")
+                .SetSource(NuGetSource)
                 .SetApiKey(NuGetApiKey)
                 .SetSkipDuplicate(true)
                 .CombineWith(packages, (_, p) => _
