@@ -36,12 +36,16 @@ public record HollowKnightVersionInfo
     public required ulong MacManifestId { get; init; }
     public required ulong LinuxManifestId { get; init; }
     public required ModdingApiSource ModdingApi { get; init; }
+    /// Version of the Modding API. Suffixed with hksr for the speedrun community builds.
+    public required string ModdingApiVersion { get; init; }
 
     public DepotManifestIds Manifests => new(WindowsManifestId, MacManifestId, LinuxManifestId);
+
 
     public static readonly HollowKnightVersionInfo _1_2_2_1 = new()
     {
         Version = "1.2.2.1",
+        ModdingApiVersion = "42hksr",
         WindowsManifestId = 648876203478229944,
         MacManifestId = 9202392574951903457,
         LinuxManifestId = 8836863544523989656,
@@ -52,10 +56,10 @@ public record HollowKnightVersionInfo
     public static readonly HollowKnightVersionInfo _1_3_1_5 = new()
     {
         Version = "1.3.1.5",
+        ModdingApiVersion = "74hksr",
         WindowsManifestId = 8301828894387332581,
         MacManifestId = 1471981400949629036,
         LinuxManifestId = 1555254915653464477,
-        // There is no upstream release for 1.3.1.5; this is the hksr backport of 1.5 api, v74 same as 1.4.3.2.
         ModdingApi = new ModdingApiSource.Zip(
             "https://github.com/pikachupower3/hk-modding-api/releases/download/1.3.1.5-74/OutputFinal.zip")
     };
@@ -63,18 +67,19 @@ public record HollowKnightVersionInfo
     public static readonly HollowKnightVersionInfo _1_4_3_2 = new()
     {
         Version = "1.4.3.2",
+        ModdingApiVersion = "74hksr",
         WindowsManifestId = 7100970131266256005,
         MacManifestId = 3397268605819178029,
         LinuxManifestId = 4631363637747835650,
-        // Not using the old mapi build https://github.com/hk-modding/api/releases/download/1.4.3.2-60/Windows.zip:
-        // The hk speedrunning backport contains monomod, hookgen, subdir layout for mods, etc.
+        // Not the official mapi build https://github.com/hk-modding/api/releases/download/1.4.3.2-60/Windows.zip
         ModdingApi = new ModdingApiSource.Zip(
-            "https://raw.githubusercontent.com/hk-speedrunning/HK-Resources/main/Mods/1432/Backport/Modding%20API/API.zip") // v74 backport
+            "https://raw.githubusercontent.com/hk-speedrunning/HK-Resources/main/Mods/1432/Backport/Modding%20API/API.zip")
     };
 
     public static readonly HollowKnightVersionInfo _1_5_78_11833 = new()
     {
         Version = "1.5.78.11833",
+        ModdingApiVersion = "77",
         WindowsManifestId = 4539921744901848404,
         MacManifestId = 7770537498842372731,
         LinuxManifestId = 5829533265112705522,
@@ -85,6 +90,7 @@ public record HollowKnightVersionInfo
     public static readonly HollowKnightVersionInfo _1_5_12620 = new()
     {
         Version = "1.5.12620",
+        ModdingApiVersion = "78",
         WindowsManifestId = 257781644874438846,
         MacManifestId = 6809616861563627670,
         LinuxManifestId = 708613018541602983,
